@@ -1,0 +1,41 @@
+{
+  "source": {
+    "channel": "email",
+    "subject": "LCL shipment - partial info",
+    "received_text_file": "email4-lcl-warnings.txt"
+  },
+  "shipment": {
+    "mode": "ocean",
+    "service": "LCL",
+    "incoterm": "unknown",
+    "origin": {
+      "city": "Shanghai",
+      "country": "China"
+    },
+    "destination": {
+      "city": "Los Angeles",
+      "country": "USA"
+    },
+    "ready_date": "tomorrow",
+    "cargo": {
+      "commodity": "details later.",
+      "pieces": null,
+      "gross_weight_kg": 2800,
+      "volume_cbm": null,
+      "containers": []
+    },
+    "parties": {
+      "shipper": "Dragon Exports Co.",
+      "consignee": "Pacific Imports LLC"
+    }
+  },
+  "validation": {
+    "errors": [],
+    "warnings": [
+      "Incoterm could not be determined or is not standard",
+      "Ready date is relative or unknown: \"tomorrow\"",
+      "Volume information is missing",
+      "Container information is missing for ocean shipment"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "source": {
+    "channel": "email",
+    "subject": "Request quotation - Export FCL",
+    "received_text_file": "email1-complete-fcl.txt"
+  },
+  "shipment": {
+    "mode": "ocean",
+    "service": "FCL",
+    "incoterm": "FOB",
+    "origin": {
+      "city": "San Jose",
+      "country": "Costa Rica"
+    },
+    "destination": {
+      "city": "Rotterdam",
+      "country": "NL"
+    },
+    "ready_date": "2026-02-20",
+    "cargo": {
+      "commodity": "canned food",
+      "pieces": null,
+      "gross_weight_kg": 18500,
+      "volume_cbm": 58,
+      "containers": [
+        {
+          "qty": 1,
+          "type": "40HC"
+        }
+      ]
+    },
+    "parties": {
+      "shipper": "Alimentos Ticos S.A.",
+      "consignee": "Euro Imports BV"
+    }
+  },
+  "validation": {
+    "errors": [],
+    "warnings": []
+  }
+}

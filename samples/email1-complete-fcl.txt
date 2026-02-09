@@ -1,0 +1,17 @@
+Subject: Request quotation - Export FCL
+
+Body:
+Hi team,
+
+Please quote for 1x40HC from San Jose, Costa Rica to Rotterdam, NL.
+
+Commodity: canned food
+Incoterm: FOB
+Ready date: 2026-02-20
+Gross weight: 18,500 kg
+Volume: 58 cbm
+Shipper: Alimentos Ticos S.A.
+Consignee: Euro Imports BV
+
+Thanks,
+Operations Team

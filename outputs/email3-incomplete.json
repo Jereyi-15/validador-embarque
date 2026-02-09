@@ -1,0 +1,48 @@
+{
+  "source": {
+    "channel": "email",
+    "subject": "Need shipping info",
+    "received_text_file": "email3-incomplete.txt"
+  },
+  "shipment": {
+    "mode": "unknown",
+    "service": "unknown",
+    "incoterm": "unknown",
+    "origin": {
+      "city": "",
+      "country": ""
+    },
+    "destination": {
+      "city": "",
+      "country": ""
+    },
+    "ready_date": "next week",
+    "cargo": {
+      "commodity": "",
+      "pieces": null,
+      "gross_weight_kg": null,
+      "volume_cbm": 25,
+      "containers": []
+    },
+    "parties": {
+      "shipper": "",
+      "consignee": ""
+    }
+  },
+  "validation": {
+    "errors": [
+      "Origin location is missing or incomplete",
+      "Destination location is missing or incomplete",
+      "Transport mode could not be determined",
+      "Shipper information is missing"
+    ],
+    "warnings": [
+      "Incoterm could not be determined or is not standard",
+      "Ready date is relative or unknown: \"next week\"",
+      "Commodity description is missing",
+      "Consignee information is missing",
+      "Gross weight information is missing",
+      "Service type could not be determined"
+    ]
+  }
+}

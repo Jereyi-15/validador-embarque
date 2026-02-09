@@ -1,0 +1,16 @@
+Subject: LCL shipment - partial info
+
+Team,
+
+Please quote for LCL shipment:
+
+From: Shanghai, China
+To: Los Angeles, USA
+Ready date: tomorrow
+Gross weight: 2,800 kg
+Shipper: Dragon Exports Co.
+Consignee: Pacific Imports LLC
+
+Note: We'll send commodity details later.
+
+Regards

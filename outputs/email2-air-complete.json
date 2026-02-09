@@ -1,0 +1,36 @@
+{
+  "source": {
+    "channel": "email",
+    "subject": "Urgent airfreight quote needed",
+    "received_text_file": "email2-air-complete.txt"
+  },
+  "shipment": {
+    "mode": "air",
+    "service": "AIR",
+    "incoterm": "DDP",
+    "origin": {
+      "city": "Miami",
+      "country": "USA"
+    },
+    "destination": {
+      "city": "Sao Paulo",
+      "country": "Brazil"
+    },
+    "ready_date": "2026-02-15",
+    "cargo": {
+      "commodity": "Electronics - mobile phones",
+      "pieces": null,
+      "gross_weight_kg": 450,
+      "volume_cbm": 3.2,
+      "containers": []
+    },
+    "parties": {
+      "shipper": "Tech Solutions Inc.",
+      "consignee": "Brasil Electronics Ltda"
+    }
+  },
+  "validation": {
+    "errors": [],
+    "warnings": []
+  }
+}

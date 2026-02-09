@@ -450,7 +450,7 @@ Prueban el flujo completo según requisitos de la evaluación:
 
 5. **Ausencia de persistencia**: Los datos procesados solo se almacenan como archivos JSON individuales. No hay base de datos, histórico de procesamiento, ni capacidad de búsqueda o agregación.
 
-### Próximos Pasos para Producción
+### Mejoras por Implementar
 
 1. **Machine Learning para parsing**: Implementar un modelo de NLP (Natural Language Processing) entrenado con correos reales para extraer entidades y relaciones de forma más robusta, reduciendo la dependencia de regex y agregando el valor de entender el contexto del correo.
 

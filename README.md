@@ -37,7 +37,7 @@ validador-embarque/
 │   ├── parsers/
 │   │   └── emailParser.ts          # Lógica de extracción de datos
 │   ├── validators/
-│   │   └── shiptmentValidator.ts   # Reglas de validación
+│   │   └── shipmentValidator.ts   # Reglas de validación
 │   ├── types/
 │   │   └── shipment.types.ts       # Definiciones TypeScript
 │   └── utils/
@@ -327,3 +327,73 @@ El sistema normaliza automáticamente:
 - No se soporta parsing de archivos adjuntos ni HTML.
 - Las fechas relativas (mañana, ayer, dentro de una semana, etc) se detectan pero no se convierten a fechas absolutas.
 - No hay persistencia en base de datos, solo generación de archivos JSON en este mini servicio.
+## Tests
+
+El proyecto incluye tests unitarios y de integración para validar el comportamiento del parser y validador.
+
+### Ejecutar Tests
+
+```bash
+npm test
+```
+
+### Ejecutar Tests en Modo Watch
+
+```bash
+npm run test:watch
+```
+
+### Casos de Prueba
+
+**Parser (emailParser.test.ts):**
+- Parsing completo de embarque FCL
+- Parsing de transporte aéreo con formato alternativo
+- Manejo de correos incompletos
+- Detección de fechas relativas
+- Parsing de múltiples formatos de contenedores
+
+**Validator (shipmentValidator.test.ts):**
+- Validación de embarque completo sin errores
+- Generación de errores bloqueantes (origen, modo, shipper)
+- Generación de warnings no bloqueantes (incoterm, fecha relativa, campos opcionales)
+- Formato de resumen de validación
+- Validación de casos parciales
+
+## Limitaciones y Próximos Pasos
+
+### Limitaciones Actuales
+
+1. **Dependencia de expresiones regulares**: El parsing se basa en patrones regex muy específicos, lo que limita la flexibilidad para formatos de correo muy variables o con estructura inesperada, como los que podríamos encontrar en un entorno de producción real. Correos con redacción muy informal o con múltiples idiomas pueden fallar en la extracción.
+
+2. **Fechas relativas no resueltas**: El sistema detecta fechas relativas como "next week", "tomorrow", "mañana" pero no las convierte a fechas absolutas. Esto requiere contexto de cuándo se recibió el correo y lógica adicional para calcular la fecha real.
+
+3. **Sin soporte para formatos ricos**: No se procesan correos en formato HTML, archivos adjuntos con información relevante (PDFs, Excel), ni imágenes con datos del embarque. Solo se parsea texto plano.
+
+4. **Idioma único**: Los patrones de extracción están optimizados para inglés. Correos en español, portugués u otros idiomas pueden no extraerse correctamente sin adaptación de los patrones.
+
+5. **Ausencia de persistencia**: Los datos procesados solo se almacenan como archivos JSON individuales. No hay base de datos, histórico de procesamiento, ni capacidad de búsqueda o agregación.
+
+### Próximos Pasos para Producción
+
+1. **Machine Learning para parsing**: Implementar un modelo de NLP (Natural Language Processing) entrenado con correos reales para extraer entidades y relaciones de forma más robusta, reduciendo la dependencia de regex y agregando el valor de entender el contexto del correo.
+
+2. **API REST con validación asíncrona**: Transformar el script CLI en una API REST (usando Express ene este caso de Node) que permita:
+   - Subir correos vía POST multipart/form-data
+   - Procesar de forma asíncrona con colas (Redis)
+   - Webhooks para notificar cuando el procesamiento termine
+   - Endpoints para consultar estado y resultados
+Esto generaría un gran valor y escalabilidad al servicio y al cliente.
+
+3. **Persistencia en base de datos**: Integrar una base de datos para:
+   - Almacenar todos los embarques procesados con mayor información
+   - Mantener histórico de validaciones
+   - Permitir búsquedas por shipper, destino, fecha, estado
+   - Dashboard de estadísticas (embarques por mes, errores más comunes)
+
+4. **Normalización de datos con servicios externos**: Integrar APIs de terceros para validar y normalizar:
+   - Códigos de aeropuertos/puertos (IATA/UN/LOCODE)
+   - Nombres de países y ciudades (GeoNames API)
+   - Validación de incoterms contra lista oficial ICC
+   - Conversión de fechas relativas usando la fecha de recepción del correo
+
+5. **Soporte multiidioma**: Expandir patrones de extracción para español, portugués, alemán, chino y otros idiomas comunes en logística internacional, con detección automática de idioma.

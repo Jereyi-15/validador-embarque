@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { parseEmail } from './parsers/emailParser';
-import { validateShipment, getValidationSummary } from './validators/shiptmentValidator';
+import { validateShipment, getValidationSummary } from './validators/shipmentValidator';
 import { processAllTextFiles } from './utils/fileUtils';
 
 // Rutas de entrada y salida

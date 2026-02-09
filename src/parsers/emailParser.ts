@@ -78,10 +78,7 @@ function extractMode(text: string): TransportMode {
     lower.includes('fcl') ||
     lower.includes('lcl') ||
     lower.includes('ocean') ||
-    lower.includes('sea') ||
-    lower.includes('40hc') ||
-    lower.includes('20ft') ||
-    lower.includes('container')
+    lower.includes('sea')
   ) {
     return TransportMode.OCEAN;
   }
@@ -144,44 +141,42 @@ function extractRoute(text: string): {
   origin: Location;
   destination: Location;
 } {
-  // Patrón: "from Ciudad, País to Ciudad, País"
-  const pattern =
-    /from\s+([^,]+),\s*([^to]+?)\s+to\s+([^,]+),\s*([^\n.]+)/i;
-  const match = text.match(pattern);
+  // Patrón 1: "from Ciudad, País to Ciudad, País"
+  const pattern1 = /\bfrom\s+([^,]+),\s*(.+?)\s+to\s+([^,]+),\s*([^\n.]+)/i;
+  const match1 = text.match(pattern1);
 
-  if (match) {
+  if (match1) {
     return {
-      origin: {
-        city: match[1].trim(),
-        country: match[2].trim(),
-      },
-      destination: {
-        city: match[3].trim(),
-        country: match[4].trim(),
-      },
+      origin: { city: match1[1].trim(), country: match1[2].trim() },
+      destination: { city: match1[3].trim(), country: match1[4].trim() },
     };
   }
 
-  // Intentar patrón alternativo: "Origin: ... Destination: ..."
-  const originPattern = /origin[:\s]+([^,]+),\s*([^\n]+)/i;
-  const destPattern = /destination[:\s]+([^,]+),\s*([^\n]+)/i;
+  // Patrón 2: "Origin: ... Destination: ..." en líneas separadas
+  const originMatch = text.match(/origin[:\s]+([^,]+),\s*([^\n]+)/i);
+  const destMatch = text.match(/destination[:\s]+([^,]+),\s*([^\n]+)/i);
 
-  const originMatch = text.match(originPattern);
-  const destMatch = text.match(destPattern);
+  if (originMatch && destMatch) {
+    return {
+      origin: { city: originMatch[1].trim(), country: originMatch[2].trim() },
+      destination: { city: destMatch[1].trim(), country: destMatch[2].trim() },
+    };
+  }
+
+  // Patrón 3: "From: ... To: ..." en líneas separadas
+  const fromMatch = text.match(/^from[:\s]+([^,]+),\s*([^\n]+)/im);
+  const toMatch = text.match(/^to[:\s]+([^,]+),\s*([^\n]+)/im);
+
+  if (fromMatch && toMatch) {
+    return {
+      origin: { city: fromMatch[1].trim(), country: fromMatch[2].trim() },
+      destination: { city: toMatch[1].trim(), country: toMatch[2].trim() },
+    };
+  }
 
   return {
-    origin: originMatch
-      ? {
-          city: originMatch[1].trim(),
-          country: originMatch[2].trim(),
-        }
-      : { city: '', country: '' },
-    destination: destMatch
-      ? {
-          city: destMatch[1].trim(),
-          country: destMatch[2].trim(),
-        }
-      : { city: '', country: '' },
+    origin: { city: '', country: '' },
+    destination: { city: '', country: '' },
   };
 }
 

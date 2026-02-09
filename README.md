@@ -53,7 +53,7 @@ validador-embarque/
 
 ### Requisitos Previos
 
-- Node.js (versión 18 o superior)
+- Node.js (versión 18 o superior) en https://nodejs.org/en/download
 - npm (viene incluido con Node.js)
 
 ### Pasos
@@ -77,12 +77,6 @@ Para procesar todos los archivos .txt en la carpeta `samples/` y generar los JSO
 
 ```bash
 npm run dev
-```
-
-O también:
-
-```bash
-npm start
 ```
 
 ### Salida Esperada
@@ -120,10 +114,6 @@ Los archivos JSON generados estarán disponibles en la carpeta `outputs/` con el
 
 1. Crear un nuevo archivo .txt en la carpeta `samples/`:
 
-```bash
-touch samples/mi-nuevo-correo.txt
-```
-
 2. Agregar el contenido del correo siguiendo el formato esperado:
 
 ```
@@ -131,17 +121,6 @@ Subject: Mi asunto
 
 Body:
 Descripción del embarque...
-
-From: Ciudad Origen, País
-To: Ciudad Destino, País
-Commodity: descripción de la mercancía
-Incoterm: FOB
-Ready date: 2026-03-15
-Gross weight: 5000 kg
-Volume: 12 cbm
-Shipper: Nombre del exportador
-Consignee: Nombre del importador
-```
 
 3. Ejecutar el procesamiento:
 
@@ -238,6 +217,7 @@ Indican información faltante o imprecisa que debe revisarse:
 1. **Incoterm desconocido**: No se encontró un incoterm estándar
 2. **Fecha relativa**: La fecha usa términos como "next week", "tomorrow"
 3. **Commodity vacío**: No se especificó la descripción de la mercancía
+Extras
 4. **Consignee faltante**: No se identificó al importador
 5. **Peso faltante**: No se especificó el peso bruto
 6. **Volumen faltante**: No se especificó el volumen
@@ -252,7 +232,7 @@ El sistema infiere el modo de transporte basándose en palabras clave:
 
 - **Ocean**: Detecta "FCL", "LCL", "ocean", "sea", "container", "40HC", "20ft"
 - **Air**: Detecta "air", "flight", "airfreight"
-- **Ground**: Detecta "truck", "ground", "road"
+- **Ground**: Detecta "LTL", "FTL", "truck", "ground", "road"
 
 ### Contenedores
 
@@ -319,7 +299,7 @@ El sistema utiliza expresiones regulares para extraer información de texto no e
 
 ### Inferencia de Modo de Transporte
 
-El modo de transporte se infiere a partir de palabras clave contextuales. Por ejemplo, "FCL" y "40HC" indican transporte marítimo aunque no se mencione explícitamente "ocean" en el correo.
+El modo de transporte se infiere a partir de palabras clave contextuales. Por ejemplo, "FCL" y "40HC" indican transporte marítimo aunque no se mencione explícitamente "ocean" en el correo, al igual que en transporte terrestre.
 
 ### Normalización de Datos
 
@@ -345,13 +325,5 @@ El sistema normaliza automáticamente:
 
 - El parsing depende de patrones de texto específicos. Correos con formato muy diferente pueden no extraerse correctamente.
 - No se soporta parsing de archivos adjuntos ni HTML.
-- Las fechas relativas se detectan pero no se convierten a fechas absolutas.
-- No hay persistencia en base de datos, solo generación de archivos JSON.
-
-## Autor
-
-Proyecto desarrollado como prueba técnica para demostrar capacidades de parsing, validación de datos y estructuración de código en TypeScript.
-
-## Licencia
-
-ISC
+- Las fechas relativas (mañana, ayer, dentro de una semana, etc) se detectan pero no se convierten a fechas absolutas.
+- No hay persistencia en base de datos, solo generación de archivos JSON en este mini servicio.

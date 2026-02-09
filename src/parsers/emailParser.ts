@@ -94,6 +94,8 @@ function extractMode(text: string): TransportMode {
 
   // Palabras clave para transporte terrestre
   if (
+    lower.includes('ftl') ||
+    lower.includes('ltl') ||
     lower.includes('truck') ||
     lower.includes('ground') ||
     lower.includes('road')

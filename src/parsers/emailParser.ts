@@ -61,7 +61,7 @@ export function parseEmail(
 /**
  * Extrae el asunto del correo
  */
-function extractSubject(text: string): string {
+export function extractSubject(text: string): string {
   // Buscar línea que empiece con "Subject:"
   const match = text.match(/^Subject:\s*(.+)$/im);
   return match ? match[1].trim() : 'No subject';
@@ -70,7 +70,7 @@ function extractSubject(text: string): string {
 /**
  * Determina el modo de transporte basado en palabras clave
  */
-function extractMode(text: string): TransportMode {
+export function extractMode(text: string): TransportMode {
   const lower = text.toLowerCase();
 
   // Palabras clave para transporte marítimo
@@ -109,7 +109,7 @@ function extractMode(text: string): TransportMode {
 /**
  * Extrae el tipo de servicio (FCL, LCL, AIR)
  */
-function extractService(text: string): ServiceType {
+export function extractService(text: string): ServiceType {
   const lower = text.toLowerCase();
 
   // Usar word boundary para evitar coincidencias parciales
@@ -124,7 +124,7 @@ function extractService(text: string): ServiceType {
 /**
  * Extrae el incoterm del texto
  */
-function extractIncoterm(text: string): Incoterm {
+export function extractIncoterm(text: string): Incoterm {
   const upper = text.toUpperCase();
 
   // Buscar incoterms comunes
@@ -139,7 +139,7 @@ function extractIncoterm(text: string): Incoterm {
 
 
 //Busca patrones como "from Ciudad, País to Ciudad, País"
-function extractRoute(text: string): {
+export function extractRoute(text: string): {
   origin: Location;
   destination: Location;
 } {
@@ -186,7 +186,7 @@ function extractRoute(text: string): {
  * Extrae información de contenedores
  * Busca patrones como "1x40HC", "2 x 20ft", "3x40'HC"
  */
-function extractContainers(text: string): Container[] {
+export function extractContainers(text: string): Container[] {
   const containers: Container[] = [];
 
   // Patrón flexible para contenedores
@@ -213,7 +213,7 @@ function extractContainers(text: string): Container[] {
 /*
  Extrae el peso bruto
  */
-function extractWeight(text: string): number | null {
+export function extractWeight(text: string): number | null {
   // Buscar patrones como "weight: 18,500 kg" o "18500kg" o "gross weight: 18.5 tons"
   const kgPattern = /(?:weight|gross)[:\s]+([\d,\.]+)\s*kg/i;
   const match = text.match(kgPattern);
@@ -239,7 +239,7 @@ function extractWeight(text: string): number | null {
 /*
   Extrae el volumen
  */
-function extractVolume(text: string): number | null {
+export function extractVolume(text: string): number | null {
   // Buscar patrones como "volume: 58 cbm" o "58cbm" o "58 m3"
   const cbmPattern = /(?:volume[:\s]+)?([\d,\.]+)\s*(?:cbm|m3|m³)/i;
   const match = text.match(cbmPattern);

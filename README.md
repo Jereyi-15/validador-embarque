@@ -34,16 +34,20 @@ Correo de texto (.txt) → Extracción → Validación → JSON estandarizado
 validador-embarque/
 ├── src/
 │   ├── index.ts                    # Punto de entrada principal
+│   ├── tests/                  # Tests unitarios y de integración
+│   │   ├── emailParser.test.ts
+│   │   └── shipmentValidator.test.ts
 │   ├── parsers/
 │   │   └── emailParser.ts          # Lógica de extracción de datos
 │   ├── validators/
-│   │   └── shipmentValidator.ts   # Reglas de validación
+│   │   └── shipmentValidator.ts    # Reglas de validación
 │   ├── types/
 │   │   └── shipment.types.ts       # Definiciones TypeScript
 │   └── utils/
 │       └── fileUtils.ts            # Utilidades de lectura/escritura
 ├── samples/                        # Correos de prueba (.txt)
 ├── outputs/                        # JSONs generados (.json)
+├── jest.config.js                  # Configuración de Jest
 ├── package.json
 ├── tsconfig.json
 └── README.md
@@ -329,7 +333,7 @@ El sistema normaliza automáticamente:
 - No hay persistencia en base de datos, solo generación de archivos JSON en este mini servicio.
 ## Tests
 
-El proyecto incluye tests unitarios y de integración para validar el comportamiento del parser y validador.
+El proyecto incluye tests unitarios y de integración para validar el comportamiento del parser y validador. Los tests están organizados en la carpeta `src/tests/`.
 
 ### Ejecutar Tests
 
@@ -343,21 +347,94 @@ npm test
 npm run test:watch
 ```
 
+### Tipos de Tests Implementados
+
+El proyecto diferencia entre dos tipos de tests:
+
+#### Tests Unitarios Puros
+Prueban funciones individuales de forma aislada con entradas controladas. Cada función se prueba independientemente sin depender de otras funciones.
+
+**Ubicación:** `src/tests/emailParser.unit.test.ts`
+
+**Ejemplos:**
+- `extractMode('FCL shipment')` → Debe retornar `TransportMode.OCEAN`
+- `extractContainers('2x40HC')` → Debe retornar `[{qty: 2, type: '40HC'}]`
+- `extractWeight('5000kg')` → Debe retornar `5000`
+
+**Ventajas:**
+- Rápidos de ejecutar
+- Fáciles de debuggear
+- Identifican exactamente qué función falla
+- Útiles para probar lógica de parsing específica
+
+#### Tests de Integración
+Prueban el flujo completo de múltiples funciones trabajando juntas. Simulan casos de uso reales.
+
+**Ubicación:** `src/tests/emailParser.test.ts` y `src/tests/shipmentValidator.test.ts`
+
+**Ejemplos:**
+- `parseEmail(emailCompleto)` → Prueba todo el pipeline de extracción
+- `validateShipment(shipmentData)` → Prueba todas las reglas de validación
+
+**Ventajas:**
+- Prueban el sistema como lo usa el usuario
+- Detectan problemas de integración entre funciones
+- Más realistas y valiosos para casos de producción
+
+### Estructura de Tests
+
+Los archivos de test están ubicados en `src/tests/`:
+- `emailParser.unit.test.ts` - **Tests unitarios** de funciones individuales del parser (10 tests)
+- `emailParser.test.ts` - **Tests de integración** del parser completo con validación (5 tests)
+
+**Total: 15 tests** cubriendo casos unitarios y de integración end-to-end.
+
 ### Casos de Prueba
 
-**Parser (emailParser.test.ts):**
+**Tests Unitarios (src/tests/emailParser.unit.test.ts):**
+
+Prueban funciones individuales de forma aislada:
+- **extractMode**: Detección de OCEAN (FCL/LCL), AIR (airfreight), y UNKNOWN
+- **extractService**: Identificación de FCL y LCL
+- **extractRoute**: Parsing de rutas "from...to" y casos sin match
+- **extractContainers**: Extracción de contenedores simples (1x40HC) y múltiples (2x40HC + 1x20ft)
+- **extractWeight**: Parsing de peso con separadores y casos sin peso
+
+**Tests de Integración (src/tests/emailParser.test.ts):**
+
+Prueban el flujo completo según requisitos de la evaluación:
+
+1. **Correo FCL completo** - Sin errores ni warnings
+   - Todos los campos extraídos correctamente
+   - Validación exitosa
+
+2. **Correo AIR completo** - Sin errores ni warnings
+   - Transporte aéreo con formato alternativo
+   - Validación exitosa
+
+3. **Correo incompleto crítico** - Con errores bloqueantes
+   - Falta origen, modo de transporte, y shipper
+   - Genera 3+ errores bloqueantes
+
+4. **Correo sin destino** - Con errores parciales
+   - Tiene modo y shipper pero falta origen y destino
+   - Genera 2 errores de ubicación
+
+5. **Correo con fecha relativa** - Con warnings
+   - Fecha "next week" genera warning
+   - Sin errores bloqueantes pero con advertencias
+
+## Limitaciones y Próximos Pasos
+- extractContainers: Extracción de especificaciones de contenedores
+- extractWeight: Parsing de peso en diferentes formatos
+- extractVolume: Parsing de volumen en CBM/m³
+
+**Parser Integración (src/tests/emailParser.test.ts):**
 - Parsing completo de embarque FCL
 - Parsing de transporte aéreo con formato alternativo
-- Manejo de correos incompletos
-- Detección de fechas relativas
-- Parsing de múltiples formatos de contenedores
-
-**Validator (shipmentValidator.test.ts):**
-- Validación de embarque completo sin errores
-- Generación de errores bloqueantes (origen, modo, shipper)
-- Generación de warnings no bloqueantes (incoterm, fecha relativa, campos opcionales)
-- Formato de resumen de validación
-- Validación de casos parciales
+5. **Correo con fecha relativa** - Con warnings
+   - Fecha "next week" genera warning
+   - Sin errores bloqueantes pero con advertencias
 
 ## Limitaciones y Próximos Pasos
 
